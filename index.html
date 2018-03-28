@@ -201,7 +201,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;JSON&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -211,10 +211,7 @@
     <div class="toc-wrapper">
       <img src="images/logo.png" class="logo" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
+              <a href="#" data-language-name="JSON">JSON</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -222,27 +219,35 @@
         <ul class="search-results"></ul>
       <div id="toc" class="toc-list-h1">
           <li>
-            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
-          </li>
-          <li>
-            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
-          </li>
-          <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
+            <a href="#introduccion" class="toc-h1 toc-link" data-title="introduccion">Introducción</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Get All Kittens">Get All Kittens</a>
+                    <a href="#ambientes" class="toc-h2 toc-link" data-title="ambientes">Ambientes</a>
                   </li>
                   <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Get a Specific Kitten">Get a Specific Kitten</a>
+                    <a href="#versionado" class="toc-h2 toc-link" data-title="versionado">Versionado</a>
                   </li>
                   <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Delete a Specific Kitten">Delete a Specific Kitten</a>
+                    <a href="#url" class="toc-h2 toc-link" data-title="url">URL</a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
+            <a href="#autenticacion" class="toc-h1 toc-link" data-title="autenticacion">Autenticación</a>
+          </li>
+          <li>
+            <a href="#llamados" class="toc-h1 toc-link" data-title="llamados">Llamados</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#comprobantes-crear" class="toc-h2 toc-link" data-title="comprobantes-crear">comprobantes/crear</a>
+                  </li>
+                  <li>
+                    <a href="#comprobantes-pdf" class="toc-h2 toc-link" data-title="comprobantes-pdf">comprobantes/pdf</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#errors" class="toc-h1 toc-link" data-title="errors">Errors</a>
           </li>
       </div>
         <ul class="toc-footer">
@@ -253,187 +258,454 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+        <h1 id='introduccion'>Introducción</h1>
+<p>Bienvenido a la API de Biller!</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>Mediante la API podrá emitir comprobantes y obtener los PDFs de los comprobantes emitidos.</p>
 
-<p>This example API documentation page was created with <a href="https://github.com/lord/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
+<p>A la derecha se muestran desplegados los ejemplos en formato Json.</p>
+<h2 id='ambientes'>Ambientes</h2>
+<p>Existen dos ambientes para operar en Biller: testing y producción. Estos se encuentran completamente separados, por lo que la creación de una cuenta de usuario en un ambiente no implica la disponibilidad de la misma en el otro.</p>
+
+<p>Cada ambiente utiliza su ambiente homólogo en DGI por lo que cualquier comprobante que sea emitido en Biller será a su vez enviado al correspondiente en DGI.</p>
+
+<p>El ambiente que se desea utilizar debe indicarse en la URL de la API a utilizar.</p>
+<h2 id='versionado'>Versionado</h2>
+<p>A la fecha, la API de Biller se encuentra en su versión 1. </p>
+
+<p>Distintos cambios de funcionamiento internamente son introducidos constantemente pero ninguno de ellos debería afectar los desarrollos de nuestros usuarios. Sin embargo, se introducirán cambios en el futuro que afectarán la backwards compatibility, por lo que se utilizarán API endpoints distintos para las distintas versiones.</p>
+
+<p>La versión de la API a utilizar debe ser especificada en la URL invocada.</p>
+<h2 id='url'>URL</h2>
+<p>La URL diseñada para interactuar con Biller tiene la forma:</p>
+
+<p><code>https://{ambiente.}biller.uy/{versión}/{llamado}?{parámetros}</code></p>
+<h3 id='ejemplos'>Ejemplos</h3>
+<p>POST <code>https://test.biller.uy/v1/comprobantes/crear</code></p>
+
+<p>GET <code>https://www.biller.uy/v1/comprobantes/pdf?id=2000</code></p>
+<h1 id='autenticacion'>Autenticación</h1>
+<p>Actualmente todos los llamados requieren de autenticación mediante Bearer Token.</p>
+
+<p>Cada token está asociado unívocamente a una empresa, por lo que será necesario primero crear un usuario en el sistema, luego crear una empresa y finalmente generar su token.</p>
+
+<p>La URL para generación de tokens en testing es: </p>
+
+<p><code>https://test.biller.uy/api-tokens</code> </p>
+
+<p>y en producción:</p>
+
+<p><code>https://www.biller.uy/api-tokens</code></p>
+
+<p>Para poder utilizarlo es necesario agregar los siguientes encabezados al paquete HTTP:</p>
+
+<p><code>Authorization: Bearer su-token-aqui</code></p>
+
+<p><code>Content-Type: application/json</code></p>
+<h1 id='llamados'>Llamados</h1><h2 id='comprobantes-crear'>comprobantes/crear</h2>
+<p>Emite un comprobante a nombre de la empresa propietaria del token, con los datos enviados en el cuerpo de la solicitud.</p>
+
 <blockquote>
-<p>To authorize, use this code:</p>
+<p>Emisión de un eTicket sin receptor:</p>
 </blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code>Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
-</code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tipo_comprobante"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forma_pago"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"moneda"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UYU"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"montos_brutos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"concepto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pelota de fútbol"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<blockquote>
+<p>Emisión de una nota de crédito de eTicket:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tipo_comprobante"</span><span class="p">:</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forma_pago"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"moneda"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UYU"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"montos_brutos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"concepto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Anulación de e-Factura A-1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"tipo_referencia"</span><span class="p">:</span><span class="w"> </span><span class="s2">"101"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serie_referencia"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"numero_referencia"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Emisión de un eTicket con receptor:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tipo_comprobante"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forma_pago"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"moneda"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UYU"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"montos_brutos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"tipo_documento"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> 
+        </span><span class="s2">"documento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"47395795"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"nombre_fantasia"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Santiago Israel"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"pais"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UY"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"concepto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pelota de fútbol"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">456</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Emisión de una eFactura con descuentos/recargos:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"forma_pago"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fecha_vencimiento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31/12/2016"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"moneda"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UYU"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"tipo_documento"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> 
+        </span><span class="s2">"documento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"214987440015"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"razon_social"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Arcos Plateados SRL"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"nombre_fantasia"</span><span class="p">:</span><span class="w"> </span><span class="s2">"McBurger"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"direccion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amézaga 2100"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"ciudad"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Montevideo"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"departamento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Montevideo"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pais"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UY"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cantidad"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"concepto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pelotas de colores"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">4242</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cantidad"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"concepto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alquiler de salón"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">450</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"descuentosRecargos"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"es_recargo"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"desc_rec_tipo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"glosa"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Descuento pago en fecha"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"valor"</span><span class="p">:</span><span class="w"> </span><span class="mi">270</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"es_recargo"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"desc_rec_tipo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"glosa"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Promociones"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"valor"</span><span class="p">:</span><span class="w"> </span><span class="mi">2990</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tipo_comprobante"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"forma_pago"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"moneda"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UYU"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"montos_brutos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cliente"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"tipo_documento"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> 
+        </span><span class="s2">"documento"</span><span class="p">:</span><span class="w"> </span><span class="s2">"47395795"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"nombre_fantasia"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Santiago Israel"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"sucursal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"pais"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UY"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cantidad"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"concepto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PROBANDING"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">20000000</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"indicador_facturacion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Se obtiene la respuesta:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2873</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serie"</span><span class="p">:</span><span class="w"> </span><span class="s2">"B"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"numero"</span><span class="p">:</span><span class="w"> </span><span class="mi">133</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"KtYEgyy8izLNqoBezxUA53pY92g="</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><h3 id='http-request'>HTTP Request</h3>
+<p><code>POST https://test.biller.uy/comprobantes/crear</code></p>
+<h3 id='entrada'>Entrada</h3>
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>Clave</th>
+<th>Valor</th>
+<th>Detalle</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>tipo_comprobante</td>
+<td>entero</td>
+<td>101 - eTicket<br>102 - Nota de crédito de eTicket<br>103 - Nota de débito de eTicket<br><br>111 - eFactura<br>112 - Nota de crédito de eFactura<br>113 - Nota de débito de eFactura</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>forma_pago</td>
+<td>entero</td>
+<td>1 - contado<br>2 - crédito</td>
+</tr>
+<tr>
+<td>fecha_vencimiento</td>
+<td>string</td>
+<td>Formato dd/mm/aaaa</td>
+</tr>
+<tr>
+<td>sucursal</td>
+<td>entero</td>
+<td>ID de sucursal de la empresa en Biller.<br>Obtener de test o producción</td>
+</tr>
+<tr>
+<td>moneda</td>
+<td>string</td>
+<td>UYU<br>USD<br>ARS<br>BRL<br>EUR<br>...</td>
+</tr>
+<tr>
+<td>tasa_cambio</td>
+<td>float</td>
+<td>Obligatorio si moneda es distinta de UYU</td>
+</tr>
+<tr>
+<td>montos_brutos</td>
+<td>booleano</td>
+<td>Indica si los precios de los ítems incluyen IVA o no.<br>En el caso de que no incluyan IVA, se calculará y se sumará al total.</td>
+</tr>
+<tr>
+<td>comprobante_asociado</td>
+<td>entero</td>
+<td>(Para notas ajuste)<br>ID del comprobante a asociar.<br>Se puede utilizar este campo o tipo_referencia, serie_referencia y numero_referencia.</td>
+</tr>
+<tr>
+<td>tipo_referencia</td>
+<td>entero</td>
+<td>(Para notas ajuste)<br>Tipo de CFE del comprobante a corregir</td>
+</tr>
+<tr>
+<td>serie_referencia</td>
+<td>string</td>
+<td>(Para notas ajuste)<br>Serie del CFE a corregir</td>
+</tr>
+<tr>
+<td>numero_referencia</td>
+<td>entero</td>
+<td>(Para notas ajuste)<br>Número del CFE a corregir</td>
+</tr>
+<tr>
+<td>referencia_global</td>
+<td>booleano</td>
+<td>(Para notas ajuste)<br>Indica si se utiliza una referencia global o no</td>
+</tr>
+<tr>
+<td>razon_referencia</td>
+<td>string</td>
+<td>(Para notas ajuste)<br>Detalle de razón de referencia. A utilizar por ejemplo en caso de tener que anular comprobantes tradicionales.</td>
+</tr>
+<tr>
+<td>numero_orden</td>
+<td>string</td>
+<td>Número de orden del CFE que se emite</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>cliente</strong></td>
+<td>objeto</td>
+<td></td>
+</tr>
+<tr>
+<td>tipo_documento</td>
+<td>entero</td>
+<td>2 - RUT<br>3 - CI</td>
+</tr>
+<tr>
+<td>documento</td>
+<td>string</td>
+<td>Valor del RUT o la CI sin puntos ni guiones</td>
+</tr>
+<tr>
+<td>razon_social</td>
+<td>string</td>
+<td>Nombre fiscal de  la empresa.<br>Ej. Arcos Dorados SA</td>
+</tr>
+<tr>
+<td>nombre_fantasia</td>
+<td>string</td>
+<td>Nombre por el que se conoce a la empresa.<br>Ej. McDonald’s</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>sucursal</strong></td>
+<td>objeto</td>
+<td></td>
+</tr>
+<tr>
+<td>direccion</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>ciudad</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>departamento</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>pais</td>
+<td>string</td>
+<td>UY<br>AR<br>BR<br>US<br>PY<br>CL<br>...</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>items</strong></td>
+<td>array de objetos</td>
+<td></td>
+</tr>
+<tr>
+<td>cantidad</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>concepto</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>precio</td>
+<td>float (2 decimales)</td>
+<td></td>
+</tr>
+<tr>
+<td>indicador_facturacion</td>
+<td>entero</td>
+<td>1 - Exento de IVA<br>2 - Tasa mínima<br>3 - Tasa básica<br>4 - Otra tasa<br>5 - Entrega gratuita<br>6 - Producto o servicio no facturable<br>7 - Producto o servicio no facturable negativo<br>8 - Ítem a rebajar en e-remitos y en e-remitos de exportación<br>9 - Ítem a anular en resguardos<br>10 - Exportación y asimiladas<br>11 - Impuesto percibido<br>12 - IVA en suspenso</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>descuentosRecargos</strong></td>
+<td>array de objetos</td>
+<td></td>
+</tr>
+<tr>
+<td>es_recargo</td>
+<td>booleano</td>
+<td></td>
+</tr>
+<tr>
+<td>desc_rec_tipo</td>
+<td>string</td>
+<td>$ o %</td>
+</tr>
+<tr>
+<td>glosa</td>
+<td>string</td>
+<td>Razón del descuento/recargo</td>
+</tr>
+<tr>
+<td>valor</td>
+<td>float (2 decimales)</td>
+<td>Valor en $ o %</td>
+</tr>
+<tr>
+<td>indicador_facturacion</td>
+<td>entero</td>
+<td>Ver items indicador_facturacion por valores posibles.<br>Valor debe coincidir con el del ítem o ítems que se desea afectar.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>adenda</td>
+<td>string</td>
+<td>Cadena a enviar a DGI en la adenda y a mostrar en el PDF</td>
 </tr>
 </tbody></table>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</code></pre>
+<h2 id='comprobantes-pdf'>comprobantes/pdf</h2>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Se obtiene el contenido del archivo PDF codificado en base64:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+</span><span class="s2">"JVBERi0xLjQKJeLjz9MKMyAwIG9iago8PC9UeXBlIC9QYWdlCi9QYXJlbnQgMSAwIFIKL01lZGlhQm94IFswIDAgNTk1LjI3NiA4NDEuODkwXQovVHJpbUJveCBbMC4wMDAgMC4wMDAgNTk1LjI3NiA4NDEuODkwXQovUmVzb3VyY2VzIDIgMCBSCi9Hcm(…)"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
+<p>Devuelve el PDF de la representación impresa del comprobante indicado en el ID.</p>
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<p>Este comprobante ya debe existir en el sistema.</p>
 <h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
+<p><code>GET https://test.biller.uy/comprobantes/pdf</code></p>
+<h3 id='entrada-2'>Entrada</h3>
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Description</th>
+<th>Clave</th>
+<th>Valor</th>
+<th>Detalle</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
-</tr>
-</tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -X DELETE
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint deletes a specific kitten.</p>
-<h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
+<td>id</td>
+<td>entero</td>
+<td>ID del comprobante a representar en PDF</td>
 </tr>
 </tbody></table>
 <h1 id='errors'>Errors</h1>
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files...just save them to the `includes` folder and add them to the top of your `index.md`'s frontmatter. Files are included in the order listed.</aside>
+<aside class="notice">
+This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
+</aside>
 
 <p>The Kittn API uses the following error codes:</p>
 
@@ -445,7 +717,7 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request -- Your request sucks.</td>
+<td>Bad Request -- Your request is invalid.</td>
 </tr>
 <tr>
 <td>401</td>
@@ -492,10 +764,7 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
+                <a href="#" data-language-name="JSON">JSON</a>
           </div>
       </div>
     </div>
